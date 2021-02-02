@@ -45,10 +45,8 @@ curl_retry=5
 curl_retry_delay=15
 
 get_auth_token () {
-  tok=$(curl --interface ${ovpniface} --insecure --silent --show-error --request POST --max-time $curl_max_time \
-    --header "Content-Type: application/json" \
-    --data "{\"username\":\"$piauser\",\"password\":\"$piapass\"}" \
-    "https://www.privateinternetaccess.com/api/client/v2/token" | jq -r '.token')
+  tok=$(curl --interface ${ovpniface} --insecure --silent --show-error --max-time $curl_max_time \
+    -u "$piauser:$piapass" "https://privateinternetaccess.com/gtoken/generateToken" | jq -r '.token')
   tok_rc=$?
   if [ "$tok_rc" -ne 0 ]; then
     logger "[PIA-API] Error! Failed to acquire auth token!"
